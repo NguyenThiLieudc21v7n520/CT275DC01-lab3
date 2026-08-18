@@ -2,11 +2,11 @@
 
 Học kỳ 3, Năm học: 2025-2026
 
-**Họ tên**: ...
+**Họ tên**: Nguyễn Thị Liễu
 
-**MSSV**: ...
+**MSSV**: DC21V7N520
 
-**Lớp HP**: ...
+**Lớp HP**: CT275DC01
 
 
 
