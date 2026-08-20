@@ -1,5 +1,11 @@
 <?php
+
 require_once __DIR__ . '/../src/bootstrap.php';
+
+use CT275\Labs\Contact;
+
+$contact = new Contact($PDO);
+$contacts = $contact->all();
 
 include_once __DIR__ . '/../src/partials/header.php';
 ?>
@@ -34,12 +40,27 @@ include_once __DIR__ . '/../src/partials/header.php';
             </tr>
           </thead>
           <tbody>
-
+            <?php foreach($contacts as $contact): ?>
+              <tr>
+                <td><?= html_escape($contact->name) ?></td>
+                <td><?= html_escape($contact->phone) ?></td>
+                <td><?= html_escape(date("d-m-Y", strtotime($contact->created_at))) ?></td>
+                <td><?= html_escape($contact->notes) ?></td>
+                <td class="d-flex justify-content-center">
+                  <a href="<?= 'edit.php?id=' . $contact->id ?>" class="btn btn-xs btn-warning">
+                    <i alt="Edit" class="fa fa-pencil"></i> Edit
+                  </a>
+                  <a href="#" class="btn btn-xs btn-danger ms-1" data-id="<?= $contact->id ?>">
+                    <i alt="Delete" class="fa fa-trash"></i> Delete
+                  </a>
+                </td>
+              </tr>
+            <?php endforeach ?>
           </tbody>
         </table>
         <!-- Table Ends Here -->
 
-        <!-- Pagination -->
+        <!-- Pagination (Đã chuyển active về trang 1) -->
         <nav class="d-flex justify-content-center">
           <ul class="pagination">
             <li class="page-item">
@@ -47,10 +68,10 @@ include_once __DIR__ . '/../src/partials/header.php';
                 <span>&laquo;</span>
               </a>
             </li>
-            <li class="page-item">
+            <li class="page-item active">
               <a role="button" class="page-link">1</a>
             </li>
-            <li class="page-item active">
+            <li class="page-item">
               <a role="button" class="page-link">2</a>
             </li>
             <li class="page-item">
@@ -72,8 +93,7 @@ include_once __DIR__ . '/../src/partials/header.php';
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">Confirmation</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal">
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">Do you want to delete this contact?</div>
         <div class="modal-footer">
@@ -85,8 +105,6 @@ include_once __DIR__ . '/../src/partials/header.php';
   </div>
 
   <?php include_once __DIR__ . '/../src/partials/footer.php' ?>
-  <script>
-  </script>
 </body>
 
 </html>
