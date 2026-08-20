@@ -32,6 +32,7 @@ include_once __DIR__ . '/../src/partials/header.php';
 ?>
 
 <body>
+
   <?php include_once __DIR__ . '/../src/partials/navbar.php' ?>
 
   <!-- Main Page Content -->
@@ -45,12 +46,14 @@ include_once __DIR__ . '/../src/partials/header.php';
     <div class="row">
       <div class="col-12">
 
+        <!-- Add Contact -->
         <a href="/add.php" class="btn btn-primary mb-3">
           <i class="fa fa-plus"></i> New Contact
         </a>
 
         <!-- Table Starts Here -->
         <table id="contacts" class="table table-striped table-bordered">
+
           <thead>
             <tr>
               <th scope="col">Name</th>
@@ -62,98 +65,140 @@ include_once __DIR__ . '/../src/partials/header.php';
           </thead>
 
           <tbody>
-            <?php foreach ($contacts as $contact): ?>
-              <tr>
-                <td><?= html_escape($contact->name) ?></td>
 
-                <td><?= html_escape($contact->phone) ?></td>
+            <?php foreach ($contacts as $contact): ?>
+
+              <tr>
 
                 <td>
-                  <?= html_escape(date("d-m-Y", strtotime($contact->created_at))) ?>
+                  <?= html_escape($contact->name) ?>
                 </td>
 
-                <td><?= html_escape($contact->notes) ?></td>
+                <td>
+                  <?= html_escape($contact->phone) ?>
+                </td>
 
+                <td>
+                  <?= html_escape(
+                      date("d-m-Y", strtotime($contact->created_at))
+                  ) ?>
+                </td>
+
+                <td>
+                  <?= html_escape($contact->notes) ?>
+                </td>
+
+                <!-- Actions -->
                 <td class="d-flex justify-content-center">
 
+                  <!-- Edit -->
                   <a
-                    href="<?= 'edit.php?id=' . $contact->id ?>"
+                    href="<?= '/edit.php?id=' . $contact->id ?>"
                     class="btn btn-xs btn-warning"
                   >
-                    <i alt="Edit" class="fa fa-pencil"></i> Edit
+                    <i alt="Edit" class="fa fa-pencil"></i>
+                    Edit
                   </a>
 
+                  <!-- Delete -->
                   <a
                     href="#"
                     class="btn btn-xs btn-danger ms-1"
                     data-id="<?= $contact->id ?>"
                   >
-                    <i alt="Delete" class="fa fa-trash"></i> Delete
+                    <i alt="Delete" class="fa fa-trash"></i>
+                    Delete
                   </a>
 
                 </td>
+
               </tr>
+
             <?php endforeach ?>
+
           </tbody>
+
         </table>
         <!-- Table Ends Here -->
 
 
-       <!-- Pagination -->
-<nav class="d-flex justify-content-center">
-  <ul class="pagination">
+        <!-- Pagination -->
+        <nav class="d-flex justify-content-center">
 
-    <!-- Previous Page -->
-    <li class="page-item<?= $paginator->getPrevPage() ? '' : ' disabled' ?>">
-      <?php if ($paginator->getPrevPage()): ?>
-        <a
-          href="/?page=<?= $paginator->getPrevPage() ?>&limit=5"
-          class="page-link"
-        >
-          <span>&laquo;</span>
-        </a>
-      <?php else: ?>
-        <span class="page-link">
-          <span>&laquo;</span>
-        </span>
-      <?php endif ?>
-    </li>
+          <ul class="pagination">
 
+            <!-- Previous Page -->
+            <li class="page-item<?= $paginator->getPrevPage() ? '' : ' disabled' ?>">
 
-    <!-- Page Numbers -->
-    <?php foreach ($pages as $pageNumber): ?>
-      <li class="page-item<?= $paginator->currentPage == $pageNumber ? ' active' : '' ?>">
-        <a
-          href="/?page=<?= $pageNumber ?>&limit=5"
-          class="page-link"
-        >
-          <?= $pageNumber ?>
-        </a>
-      </li>
-    <?php endforeach ?>
+              <?php if ($paginator->getPrevPage()): ?>
+
+                <a
+                  href="/?page=<?= $paginator->getPrevPage() ?>&limit=5"
+                  class="page-link"
+                >
+                  <span>&laquo;</span>
+                </a>
+
+              <?php else: ?>
+
+                <span class="page-link">
+                  <span>&laquo;</span>
+                </span>
+
+              <?php endif ?>
+
+            </li>
 
 
-    <!-- Next Page -->
-    <li class="page-item<?= $paginator->getNextPage() ? '' : ' disabled' ?>">
-      <?php if ($paginator->getNextPage()): ?>
-        <a
-          href="/?page=<?= $paginator->getNextPage() ?>&limit=5"
-          class="page-link"
-        >
-          <span>&raquo;</span>
-        </a>
-      <?php else: ?>
-        <span class="page-link">
-          <span>&raquo;</span>
-        </span>
-      <?php endif ?>
-    </li>
+            <!-- Page Numbers -->
+            <?php foreach ($pages as $pageNumber): ?>
 
-  </ul>
-</nav>
-<!-- Pagination Ends Here -->
+              <li
+                class="page-item<?= $paginator->currentPage == $pageNumber ? ' active' : '' ?>"
+              >
+
+                <a
+                  href="/?page=<?= $pageNumber ?>&limit=5"
+                  class="page-link"
+                >
+                  <?= $pageNumber ?>
+                </a>
+
+              </li>
+
+            <?php endforeach ?>
+
+
+            <!-- Next Page -->
+            <li class="page-item<?= $paginator->getNextPage() ? '' : ' disabled' ?>">
+
+              <?php if ($paginator->getNextPage()): ?>
+
+                <a
+                  href="/?page=<?= $paginator->getNextPage() ?>&limit=5"
+                  class="page-link"
+                >
+                  <span>&raquo;</span>
+                </a>
+
+              <?php else: ?>
+
+                <span class="page-link">
+                  <span>&raquo;</span>
+                </span>
+
+              <?php endif ?>
+
+            </li>
+
+          </ul>
+
+        </nav>
+        <!-- Pagination Ends Here -->
+
       </div>
     </div>
+
   </div>
 
 
