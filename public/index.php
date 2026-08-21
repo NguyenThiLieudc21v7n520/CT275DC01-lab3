@@ -101,14 +101,28 @@ include_once __DIR__ . '/../src/partials/header.php';
                   </a>
 
                   <!-- Delete -->
-                  <a
-                    href="#"
-                    class="btn btn-xs btn-danger ms-1"
-                    data-id="<?= $contact->id ?>"
+                  <form
+                    class="ms-1"
+                    action="/delete.php"
+                    method="POST"
                   >
-                    <i alt="Delete" class="fa fa-trash"></i>
-                    Delete
-                  </a>
+
+                    <input
+                      type="hidden"
+                      name="id"
+                      value="<?= $contact->id ?>"
+                    >
+
+                    <button
+                      type="submit"
+                      class="btn btn-xs btn-danger"
+                      name="delete-contact"
+                    >
+                      <i alt="Delete" class="fa fa-trash"></i>
+                      Delete
+                    </button>
+
+                  </form>
 
                 </td>
 
@@ -254,6 +268,64 @@ include_once __DIR__ . '/../src/partials/header.php';
 
 
   <?php include_once __DIR__ . '/../src/partials/footer.php' ?>
+
+  <script>
+    const deleteButtons = document.querySelectorAll(
+      'button[name="delete-contact"]'
+    );
+
+    deleteButtons.forEach(button => {
+
+      button.addEventListener('click', function(e) {
+
+        e.preventDefault();
+
+        const form = button.closest('form');
+
+        const nameTd = button
+          .closest('tr')
+          .querySelector('td:first-child');
+
+        if (nameTd) {
+          document.querySelector('.modal-body').textContent =
+            `Do you want to delete "${nameTd.textContent.trim()}"?`;
+        }
+
+        const submitForm = function() {
+          form.submit();
+        };
+
+        document
+          .getElementById('delete')
+          .addEventListener('click', submitForm, {
+            once: true
+          });
+
+        const modalEl = document.getElementById('delete-confirm');
+
+        const confirmModal = new bootstrap.Modal(modalEl, {
+          backdrop: 'static',
+          keyboard: false
+        });
+
+        confirmModal.show();
+
+        modalEl.addEventListener(
+          'hidden.bs.modal',
+          function() {
+            document
+              .getElementById('delete')
+              .removeEventListener('click', submitForm);
+          },
+          {
+            once: true
+          }
+        );
+
+      });
+
+    });
+  </script>
 
 </body>
 

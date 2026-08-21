@@ -61,7 +61,10 @@ class Contact
     {
         $contacts = [];
 
-        $statement = $this->db->prepare('select * from contacts');
+        $statement = $this->db->prepare(
+            'select * from contacts'
+        );
+
         $statement->execute();
 
         while ($row = $statement->fetch()) {
@@ -75,22 +78,36 @@ class Contact
 
     public function count(): int
     {
-        $statement = $this->db->prepare('select count(*) from contacts');
+        $statement = $this->db->prepare(
+            'select count(*) from contacts'
+        );
+
         $statement->execute();
 
         return (int) $statement->fetchColumn();
     }
 
-    public function paginate(int $offset = 0, int $limit = 10): array
-    {
+    public function paginate(
+        int $offset = 0,
+        int $limit = 10
+    ): array {
         $contacts = [];
 
         $statement = $this->db->prepare(
             'select * from contacts limit :limit offset :offset'
         );
 
-        $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $statement->bindValue(
+            ':offset',
+            $offset,
+            PDO::PARAM_INT
+        );
+
+        $statement->bindValue(
+            ':limit',
+            $limit,
+            PDO::PARAM_INT
+        );
 
         $statement->execute();
 
@@ -162,6 +179,17 @@ class Contact
         }
 
         return null;
+    }
+
+    public function delete(): bool
+    {
+        $statement = $this->db->prepare(
+            'delete from contacts where id = :id'
+        );
+
+        return $statement->execute([
+            'id' => $this->id
+        ]);
     }
 
     protected function fillFromDbRow(array $row): Contact
