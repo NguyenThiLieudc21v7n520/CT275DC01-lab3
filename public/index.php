@@ -35,7 +35,6 @@ include_once __DIR__ . '/../src/partials/header.php';
 
   <?php include_once __DIR__ . '/../src/partials/navbar.php' ?>
 
-  <!-- Main Page Content -->
   <div class="container">
 
     <?php
@@ -51,11 +50,12 @@ include_once __DIR__ . '/../src/partials/header.php';
           <i class="fa fa-plus"></i> New Contact
         </a>
 
-        <!-- Table Starts Here -->
+        <!-- Table -->
         <table id="contacts" class="table table-striped table-bordered">
 
           <thead>
             <tr>
+              <th scope="col">Avatar</th>
               <th scope="col">Name</th>
               <th scope="col">Phone</th>
               <th scope="col">Date Created</th>
@@ -70,20 +70,51 @@ include_once __DIR__ . '/../src/partials/header.php';
 
               <tr>
 
+                <!-- Avatar -->
+                <td class="text-center">
+
+                  <?php if (!empty($contact->avatar)): ?>
+
+                    <img
+                      src="<?= html_escape($contact->avatar) ?>"
+                      alt="Avatar"
+                      style="
+                        width: 60px;
+                        height: 60px;
+                        object-fit: cover;
+                      "
+                      class="rounded"
+                    >
+
+                  <?php else: ?>
+
+                    <span>No avatar</span>
+
+                  <?php endif ?>
+
+                </td>
+
+                <!-- Name -->
                 <td>
                   <?= html_escape($contact->name) ?>
                 </td>
 
+                <!-- Phone -->
                 <td>
                   <?= html_escape($contact->phone) ?>
                 </td>
 
+                <!-- Date Created -->
                 <td>
                   <?= html_escape(
-                      date("d-m-Y", strtotime($contact->created_at))
+                      date(
+                          "d-m-Y",
+                          strtotime($contact->created_at)
+                      )
                   ) ?>
                 </td>
 
+                <!-- Notes -->
                 <td>
                   <?= html_escape($contact->notes) ?>
                 </td>
@@ -133,7 +164,6 @@ include_once __DIR__ . '/../src/partials/header.php';
           </tbody>
 
         </table>
-        <!-- Table Ends Here -->
 
 
         <!-- Pagination -->
@@ -142,7 +172,9 @@ include_once __DIR__ . '/../src/partials/header.php';
           <ul class="pagination">
 
             <!-- Previous Page -->
-            <li class="page-item<?= $paginator->getPrevPage() ? '' : ' disabled' ?>">
+            <li
+              class="page-item<?= $paginator->getPrevPage() ? '' : ' disabled' ?>"
+            >
 
               <?php if ($paginator->getPrevPage()): ?>
 
@@ -184,7 +216,9 @@ include_once __DIR__ . '/../src/partials/header.php';
 
 
             <!-- Next Page -->
-            <li class="page-item<?= $paginator->getNextPage() ? '' : ' disabled' ?>">
+            <li
+              class="page-item<?= $paginator->getNextPage() ? '' : ' disabled' ?>"
+            >
 
               <?php if ($paginator->getNextPage()): ?>
 
@@ -208,7 +242,6 @@ include_once __DIR__ . '/../src/partials/header.php';
           </ul>
 
         </nav>
-        <!-- Pagination Ends Here -->
 
       </div>
     </div>
@@ -269,7 +302,10 @@ include_once __DIR__ . '/../src/partials/header.php';
 
   <?php include_once __DIR__ . '/../src/partials/footer.php' ?>
 
+
+  <!-- Delete JavaScript -->
   <script>
+
     const deleteButtons = document.querySelectorAll(
       'button[name="delete-contact"]'
     );
@@ -284,11 +320,13 @@ include_once __DIR__ . '/../src/partials/header.php';
 
         const nameTd = button
           .closest('tr')
-          .querySelector('td:first-child');
+          .querySelector('td:nth-child(2)');
 
         if (nameTd) {
+
           document.querySelector('.modal-body').textContent =
             `Do you want to delete "${nameTd.textContent.trim()}"?`;
+
         }
 
         const submitForm = function() {
@@ -297,34 +335,42 @@ include_once __DIR__ . '/../src/partials/header.php';
 
         document
           .getElementById('delete')
-          .addEventListener('click', submitForm, {
-            once: true
+          .addEventListener(
+            'click',
+            submitForm,
+            { once: true }
+          );
+
+        const modalEl =
+          document.getElementById('delete-confirm');
+
+        const confirmModal =
+          new bootstrap.Modal(modalEl, {
+            backdrop: 'static',
+            keyboard: false
           });
-
-        const modalEl = document.getElementById('delete-confirm');
-
-        const confirmModal = new bootstrap.Modal(modalEl, {
-          backdrop: 'static',
-          keyboard: false
-        });
 
         confirmModal.show();
 
         modalEl.addEventListener(
           'hidden.bs.modal',
           function() {
+
             document
               .getElementById('delete')
-              .removeEventListener('click', submitForm);
+              .removeEventListener(
+                'click',
+                submitForm
+              );
+
           },
-          {
-            once: true
-          }
+          { once: true }
         );
 
       });
 
     });
+
   </script>
 
 </body>

@@ -12,6 +12,7 @@ class Contact
     public $name;
     public $phone;
     public $notes;
+    public $avatar;
     public $created_at;
     public $updated_at;
 
@@ -25,6 +26,7 @@ class Contact
         $this->name = $data['name'] ?? '';
         $this->phone = $data['phone'] ?? '';
         $this->notes = $data['notes'] ?? '';
+        $this->avatar = $data['avatar'] ?? null;
 
         return $this;
     }
@@ -94,7 +96,8 @@ class Contact
         $contacts = [];
 
         $statement = $this->db->prepare(
-            'select * from contacts limit :limit offset :offset'
+            'select * from contacts
+             limit :limit offset :offset'
         );
 
         $statement->bindValue(
@@ -125,37 +128,43 @@ class Contact
         $result = false;
 
         if ($this->id > 0) {
+
             $statement = $this->db->prepare(
                 'update contacts set
                     name = :name,
                     phone = :phone,
                     notes = :notes,
+                    avatar = :avatar,
                     updated_at = now()
-                where id = :id'
+                 where id = :id'
             );
 
             $result = $statement->execute([
                 'name' => $this->name,
                 'phone' => $this->phone,
                 'notes' => $this->notes,
+                'avatar' => $this->avatar,
                 'id' => $this->id
             ]);
+
         } else {
+
             $statement = $this->db->prepare(
                 'insert into contacts
-                    (name, phone, notes, created_at, updated_at)
-                values
-                    (:name, :phone, :notes, now(), now())'
+                    (name, phone, notes, avatar, created_at, updated_at)
+                 values
+                    (:name, :phone, :notes, :avatar, now(), now())'
             );
 
             $result = $statement->execute([
                 'name' => $this->name,
                 'phone' => $this->phone,
-                'notes' => $this->notes
+                'notes' => $this->notes,
+                'avatar' => $this->avatar
             ]);
 
             if ($result) {
-                $this->id = $this->db->lastInsertId();
+                $this->id = (int) $this->db->lastInsertId();
             }
         }
 
@@ -174,7 +183,6 @@ class Contact
 
         if ($row = $statement->fetch()) {
             $this->fillFromDbRow($row);
-
             return $this;
         }
 
@@ -198,6 +206,7 @@ class Contact
         $this->name = $row['name'];
         $this->phone = $row['phone'];
         $this->notes = $row['notes'];
+        $this->avatar = $row['avatar'];
         $this->created_at = $row['created_at'];
         $this->updated_at = $row['updated_at'];
 
